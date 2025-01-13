@@ -62,7 +62,7 @@
 
                 <p>At runtime, the vehicles also use a hierarchical state machine to traverse the routes.  The routes can also be cached so that as one route is completed, subsequent substates can reuse the same path without needing redundant pathfinding requests.</p>
 
-                <p>Future iterations of this could include features such as detecting when a vehicle is stuck and creating an algorithm to "unstuck" the vehicle.  Secondarily, accounting for the vehicle's velocity during pathfinding's evaluation of route options could help choosing routes which require driving in reverse for a long time/attempting to drive in reverse while already driving forward at a high velocity.</p>
+                <p>Future iterations of this could include features such as detecting when a vehicle is stuck and creating an algorithm to "unstuck" the vehicle.  Secondarily, accounting for the vehicle's velocity during pathfinding's evaluation of route options could help avoid picking routes which require driving slowly in reverse for a long time/attempting to drive in reverse while already driving forward at a high velocity.</p>
                 
             </div>
             <div class="row center">
