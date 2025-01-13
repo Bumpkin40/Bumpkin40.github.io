@@ -39,7 +39,7 @@
                 
                 <p>The main challenge that type of AI creates is that Unity's default <a href="https://docs.unity3d.com/550/Documentation/Manual/class-NavMeshAgent.html">nav mesh agent</a> does not work because there is no sense of a <a href="https://en.wikipedia.org/wiki/Turning_radius">turning radius</a></p>
 
-                <p>This means some parts of the NavMesh API can be used, but the pathfinding needs to be done using custom code.  Additionally, the approach I am looking to use should work in realtime.</p>
+                <p>This means some parts of the NavMesh API can be used, but the pathfinding needs to be done using custom code.  Additionally, the approach I am looking to use should work in realtime.  It should also be possible for multiple vehicles to simultaneously exist without slowing down the game's framerate.</p>
 
                 <p>In order to perform the pathfinding, I decided to employ hybrid A*.  This means that the pathfinding takes in the parameters of a vehicle and can generate subsections of a route using the vehicle's parameters as opposed to just walking through the nav mesh as it would if it was a standard "nav agent".</p>
 
