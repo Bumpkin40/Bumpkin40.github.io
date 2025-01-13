@@ -33,6 +33,41 @@
             <br><br>
             <h1 class="header center orange-text">Personal Project</h1>
             <div class="row">
+                <h3>Jan 2025 Update</h5> 
+                <h4>Vehicle AI</h4>
+                <p>One feature I was interested in was making an AI which is capable of driving a vehicle.</p>
+                
+                <p>The main challenge that type of AI creates is that Unity's default <a href="https://docs.unity3d.com/550/Documentation/Manual/class-NavMeshAgent.html">nav mesh agent</a> does not work because there is no sense of a <a href="https://en.wikipedia.org/wiki/Turning_radius">turning radius</a></p>
+
+                <p>This means some parts of the NavMesh API can be used, but the pathfinding needs to be done using custom code.  Additionally, the approach I am looking to use should work in realtime.</p>
+
+                <p>In order to perform the pathfinding, I decided to employ hybrid A*.  This means that the pathfinding takes in the parameters of a vehicle and can generate subsections of a route using the vehicle's parameters as opposed to just walking through the nav mesh as it would if it was a standard "nav agent".</p>
+
+                <p>I was able to make this work by employing hybrid A* from one point to another and using BFS to expand the search depth.  One challenge is that the number of routes evaluated needs to be greatly reduced because it would create performance issues to evaluate a large number of routes in a single frame.</p>
+                
+                <p>The results look like this:</p>
+                <div class="row center">
+                    <img src="img/a_star.gif" alt="a_star">
+                    <br>
+                </div>
+
+                <p>The lines in the image represent:</p>
+
+                <ul>
+                    <li>White Line = option for the path which is being searched for.</li>
+                    <li>Non-Bright Green lines - The path being traversed.</li>
+                    <li>Circles - Waypoints along the line</li>
+                    <li>Bright Green Lines - Heuristic path was found.  This means the vehicle no longer needs to do pathfinding, it's just a straight line to the destination.</li>
+                </ul> 
+
+                <p>At runtime, the vehicles also use a hierarchical state machine to traverse the routes.  The routes can also be cached so that as one route is completed, subsequent substates can reuse the same path without needing redundant pathfinding requests.</p>
+                
+            </div>
+            <div class="row center">
+
+                <br>
+            </div>
+            <div class="row">
                 <h3>March 2023 Update</h5> 
                 <p>Since the last update more than 3 years ago, there have been a lot of new features added and improvements made to make development more sustainable.</p>
                 <h4>Automated Testing</h4>
