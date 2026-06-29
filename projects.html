@@ -56,16 +56,18 @@
                 <h5>Technical Approach</h5>
                 <h6>Building Blocks</h6>
                 <p>
-                    <b>Physics Simulation</b> - Unity3D allows you to run scenes simultaneously.  So, you can have your visible scene and a secondary scene which is not rendered and it can run faster than realtime. So, I decided to create a second scene which is run in the background and can handle various physics simulations. <br/><br/>
+                    <b>Building Block 1 - Physics Simulation</b> - Unity3D allows you to run scenes simultaneously.  So, you can have your visible scene and a secondary scene which is not rendered and it can run faster than realtime. So, I decided to create a second scene which is run in the background and can handle various physics simulations. <br/><br/>
                     To keep the live physics and simulated the same, I created a PhysicsManipulator interface & implementation per projectile.  
                     <br/><br/>
                     This is necessary because projectiles might have starting torque/velocities or some propulsion to make them move in a game-like quick motion instead of being grounded in true physics.  The interface looks like below: 
                     <center><img src="img/physics_manipulator/phys_interface.png" alt="a_star" style="width:500px;"></center><br/>
                     It has a context too to keep it testable.  You can see it has a rigidbody & transform to manipulate.  The context is below and that is how the manipulators modify the projectile.
                     <center><img src="img/physics_manipulator/phys_context.png" alt="a_star" style="width:500px;"></center><br/>
+                    So, the creation of this interface lets me ensure that a projectile moving in the rendered, realtime world is manipulated with the same code that the projectiles simulated are modified with.  Therefore, the live-view and simulated view should have identical trajectories.
+                    <br/>
 
                     <br/>
-                    <b>Animation Throw Release Point Querying</b> - Unity's animation API is a bit odd.  It seems like it was created for animators unfamiliar with C# and the C# API is kind of an afterthought. I had to experiment with a few approaches.  What ended up working is adding an empty animation clip to my animator named "SampleClip" like below:
+                    <b>Building block 2 - Animation Throw Release Point Querying</b> - Unity's animation API is a bit odd.  It seems like it was created for animators unfamiliar with C# and the C# API is kind of an afterthought. I had to experiment with a few approaches.  What ended up working is adding an empty animation clip to my animator named "SampleClip" like below:
                     <br/><br/>
                     <center><img src="img/animator_empty_clip.png" alt="a_star" style="width:300px;"></center><br/>
                     In order to see where the release point of a throw is, I put my animation into SampleClip, skip forward to the release time, and sample the release bone's position.  
@@ -78,7 +80,7 @@
                 <h6>For the Player...</h6>
                 The player calls this whenever an item is equipped continuously.  Doing this without a cache of recent results created garbage collection issues, so I had to make it cache based on the player's rotation and return the result if it's been already done.
                 <br/>
-                It looks like below for a few weapon types when it's rendered.  The grey line is the preview of the trajectory.
+                It looks like below for a few projectile types when it's rendered.  The grey line is the preview of the trajectory.
                 <br/><br/>
 
                 <center><img src="img/trajectory_calc/bottle_trajectory.gif" alt="a_star" style="width:255px;"><img src="img/trajectory_calc/baseball_bat_trajectory.gif" alt="a_star" style="width:255px;"><img src="img/trajectory_calc/baseball_trajectory.gif" style="width:255px;"></center>
