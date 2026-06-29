@@ -33,15 +33,81 @@
             <br><br>
             <h1 class="header center orange-text">Personal Project</h1>
             <div class="row">
+                <h3>June 2026 - Making the AI and Player Understand Trajectories</h5> 
+                <h4></h4>
+                <h5>Problem</h5>
+                <p>
+                    I want NPCs to be able to throw physics-based projectiles at targets without missing horribly.
+                    <br/>
+                    I want the player to have some intuition about where a particular throw will go.
+                </p>
+                <p></p>
+                <h5>Scope</h5>
+                <p>In order for this to work, I need it to:</p>
+                <ol>
+                    <li>Work in realtime without dipping framerate below 144 frames per second.</li>
+                    <li>Work with any projectile type that can be thrown without requiring me to do data entry.</li>
+                    <li>Understand where each item will be release from during the "throw" animation.</li>
+                    <li>The simulated projectile should 1:1 match the real trajectory.</li>
+                    <li>I don't want the users of this to be hard-coupled with Unity3D in case Unity3D tries to chair pull their licensing again.  In that case, I can port it to a new engine and minimize the impact to my codebase.</li>
+                </ol>
+                <ul>
+                <h5>Technical Approach</h5>
+                <h6>Building Blocks</h6>
+                <p>
+                    <b>Physics Simulation</b> - Unity3D allows you to run scenes simultaneously.  So, you can have your visible scene and a secondary scene which is not rendered and it can run faster than realtime. So, I decided to create a second scene which is run in the background and can handle various physics simulations. <br/><br/>
+                    To keep the live physics and simulated the same, I created a PhysicsManipulator interface & implementation per projectile.  
+                    <br/><br/>
+                    This is necessary because projectiles might have starting torque/velocities or some propulsion to make them move in a game-like quick motion instead of being grounded in true physics.  The interface looks like below: 
+                    <center><img src="img/physics_manipulator/phys_interface.png" alt="a_star" style="width:500px;"></center><br/>
+                    It has a context too to keep it testable.  You can see it has a rigidbody & transform to manipulate.  The context is below and that is how the manipulators modify the projectile.
+                    <center><img src="img/physics_manipulator/phys_context.png" alt="a_star" style="width:500px;"></center><br/>
+
+                    <br/>
+                    <b>Animation Throw Release Point Querying</b> - Unity's animation API is a bit odd and it seems this use case is uncommon, so I had to experiment with a few approaches.  What ended up working is adding an empty animation clip to my animator named "SampleClip" like below:<br/> 
+                    <center><img src="img/animator_empty_clip.png" alt="a_star" style="width:300px;"></center><br/>
+                    In order to see where the release point of a throw is, I put my animation into SampleClip, skip forward to the release time, and sample the release bone's position.  That lets me grab the local position and local rotation below from the baseball throw:
+                    <center><img src="img/baseball_bone_position.png" alt="a_star" style="width:400px;"></center><br/>
+                <h5>Result</h5>
+                <h6>For the Player...</h6>
+                The player calls this whenever an item is equipped continuously.  Doing this without a cache of recent results created garbage collection issues, so I had to make it cache based on the player's rotation and return the result if it's been already done.
+                <br/>
+                It looks like below when it's rendered.  The grey line is the preview of the trajectory.
+                <br/>
+
+                <img src="img/trajectory_calc/bottle_trajectory.gif" alt="a_star" style="width:250px;"><img src="img/trajectory_calc/baseball_bat_trajectory.gif" alt="a_star" style="width:250px;"><img src="img/trajectory_calc/baseball_trajectory.gif" style="width:250px;">
+                <br/>
+                I can keep a reliable 200+ frames per second while doing this, so I am happy with the initial performance.
+                <br/>
+                <h6>For NPCs...</h6>
+                NPCs call the same API that the player does except they don't render the points, they use it to calculate the trajectory and to determine if they need to rotate to hit their target. 
+                <br/><br/>
+                NPC using the API to aim and throw a pizza and hit the player:
+                <br/>
+                <center><img src="img/trajectory_calc/npc_trajectory.gif" alt="a_star" style="width:400px;"></center>
+                
+                This explanation does hand-waive the code behind the scenes to make the NPCs know how to offset their rotation to hit the target, how to make NPCs calculate usable vantage points, but those are outside of the scope of this video.
+                <br/><br/>
+
+                <h5>Next Steps...</h5>
+                <ol>
+                    <li>I could eliminate the need to calculate trajectories at runtime if I wrote something to save these trajectories to file at build/compile-time.</li>
+                    <li>The display of the trajectories to the player is very much a placeholder and could be improved.</li>
+                </ol>
+                
+                <ul>
+                
+            </div>
+            <div class="row">
                 <h3>Jan 2025 Update</h5> 
                 <h4>Vehicle AI</h4>
                 <p>One feature I was interested in was making an AI which is capable of driving a vehicle.</p>
                 
                 <p>The main challenge that type of AI creates is that Unity's default <a href="https://docs.unity3d.com/550/Documentation/Manual/class-NavMeshAgent.html">nav mesh agent</a> does not work because there is no sense of a <a href="https://en.wikipedia.org/wiki/Turning_radius">turning radius</a></p>
 
-                <p>This means some parts of the NavMesh API can be used, but the pathfinding needs to be done using custom code.  Additionally, the approach I am looking to use should work in realtime.  It should also be possible for multiple vehicles to simultaneously exist without slowing down the game's framerate.</p>
+                <p>This means some parts of the NavMesh API can be used, but the path-finding needs to be done using custom code.  Additionally, the approach I am looking to use should work in realtime.  It should also be possible for multiple vehicles to simultaneously exist without slowing down the game's framerate.</p>
 
-                <p>In order to perform the pathfinding, I decided to employ hybrid A*.  This means that the pathfinding takes in the parameters of a vehicle and can generate subsections of a route using the vehicle's parameters as opposed to just walking through the nav mesh as it would if it was a standard "nav agent".</p>
+                <p>In order to perform the path-finding, I decided to employ hybrid A*.  This means that the path-finding takes in the parameters of a vehicle and can generate subsections of a route using the vehicle's parameters as opposed to just walking through the nav mesh as it would if it was a standard "nav agent".</p>
 
                 <p>I was able to make this work by employing hybrid A* from one point to another and using BFS to expand the search depth.  One challenge is that the number of routes evaluated needs to be greatly reduced because it would create performance issues to evaluate a large number of routes in a single frame.</p>
                 
@@ -53,16 +119,16 @@
 
                 <p>The lines in the image represent:</p>
 
-                <ul>
+                <ol>
                     <li>White Line = option for the path which is being searched for.</li>
                     <li>Non-Bright Green lines - The path being traversed.</li>
                     <li>Circles - Waypoints along the line</li>
-                    <li>Bright Green Lines - Heuristic path was found.  This means the vehicle no longer needs to do pathfinding, it's just a straight line to the destination.</li>
-                </ul> 
+                    <li>Bright Green Lines - Heuristic path was found.  This means the vehicle no longer needs to do path-finding, it's just a straight line to the destination.</li>
+                </ol> 
 
-                <p>At runtime, the vehicles also use a hierarchical state machine to traverse the routes.  The routes can also be cached so that as one route is completed, subsequent substates can reuse the same path without needing redundant pathfinding requests.</p>
+                <p>At runtime, the vehicles also use a hierarchical state machine to traverse the routes.  The routes can also be cached so that as one route is completed, subsequent sub-states can reuse the same path without needing redundant path-finding requests.</p>
 
-                <p>Future iterations of this could include features such as detecting when a vehicle is stuck and creating an algorithm to "unstuck" the vehicle.  Secondarily, accounting for the vehicle's velocity during pathfinding's evaluation of route options could help avoid picking routes which require driving slowly in reverse for a long time/attempting to drive in reverse while already driving forward at a high velocity.</p>
+                <p>Future iterations of this could include features such as detecting when a vehicle is stuck and creating an algorithm to "unstuck" the vehicle.  Secondarily, accounting for the vehicle's velocity during path-finding's evaluation of route options could help avoid picking routes which require driving slowly in reverse for a long time/attempting to drive in reverse while already driving forward at a high velocity.</p>
                 
             </div>
             <div class="row center">
@@ -75,7 +141,6 @@
     <!--  Scripts-->
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="js/materialize.js"></script>
-    <script src="js/init.js"></script>
 
 </body>
 </html>
