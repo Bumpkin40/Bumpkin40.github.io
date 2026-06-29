@@ -67,7 +67,11 @@
                     <br/>
 
                     <br/>
-                    <b>Building block 2 - Animation Throw Release Point Querying</b> - Unity's animation API is a bit odd.  It seems like it was created for animators unfamiliar with C# and the C# API is kind of an afterthought. I had to experiment with a few approaches.  What ended up working is adding an empty animation clip to my animator named "SampleClip" like below:
+                    <b>Building block 2 - Animation Throw Release Point Querying</b> - The first building block lets me know where an item will go in general, but I also need a way to orient it relative to where the player is in world-space and where the projectile will be released when thrown. 
+                    <br/><br/>
+                    So, I need to set up a way to check animations to see where the release point of the projectile will be in local-space.
+                    <br/><br/>
+                    In order to do this, I needed to figure out how to get this information out of Unity's animator.  Unity's animation API is a bit odd.  It seems like it was created for animators unfamiliar with C# and the C# API is kind of an afterthought. I had to experiment with a few approaches.  What ended up working is adding an empty animation clip to my animator named "SampleClip" like below:
                     <br/><br/>
                     <center><img src="img/animator_empty_clip.png" alt="a_star" style="width:300px;"></center><br/>
                     In order to see where the release point of a throw is, I put my animation into SampleClip, skip forward to the release time, and sample the release bone's position.  
