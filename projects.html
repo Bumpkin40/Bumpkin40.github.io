@@ -72,12 +72,14 @@
                 <h6>For the Player...</h6>
                 The player calls this whenever an item is equipped continuously.  Doing this without a cache of recent results created garbage collection issues, so I had to make it cache based on the player's rotation and return the result if it's been already done.
                 <br/>
-                It looks like below when it's rendered.  The grey line is the preview of the trajectory.
+                It looks like below for a few weapon types when it's rendered.  The grey line is the preview of the trajectory.
                 <br/>
 
                 <img src="img/trajectory_calc/bottle_trajectory.gif" alt="a_star" style="width:250px;"><img src="img/trajectory_calc/baseball_bat_trajectory.gif" alt="a_star" style="width:250px;"><img src="img/trajectory_calc/baseball_trajectory.gif" style="width:250px;">
                 <br/>
-                I can keep a reliable 200+ frames per second while doing this, so I am happy with the initial performance.
+                You can see this is working as intended because the items are following the grey lines after they are released.
+                <br/>
+                I can also keep a reliable 200+ frames per second while doing this, so I am happy with the initial performance.
                 <br/>
                 <h6>For NPCs...</h6>
                 NPCs call the same API that the player does except they don't render the points, they use it to calculate the trajectory and to determine if they need to rotate to hit their target. 
@@ -86,8 +88,9 @@
                 <br/>
                 <center><img src="img/trajectory_calc/npc_trajectory.gif" alt="a_star" style="width:400px;"></center>
                 
-                This explanation does hand-waive the code behind the scenes to make the NPCs know how to offset their rotation to hit the target, how to make NPCs calculate usable vantage points, but those are outside of the scope of this video.
+                This explanation for NPCs does hand-waive the code behind the scenes to make the NPCs know how to offset their rotation to hit the target, how to make NPCs calculate usable vantage points, but those are outside of the scope of this update.
                 <br/><br/>
+                However, NPCs can reliably understand the trajectory of their items, throw items, and hit targets. So, this is also doing what I need.
 
                 <h5>Next Steps...</h5>
                 <ol>
