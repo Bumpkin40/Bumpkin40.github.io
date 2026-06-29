@@ -65,16 +65,21 @@
                     <center><img src="img/physics_manipulator/phys_context.png" alt="a_star" style="width:500px;"></center><br/>
 
                     <br/>
-                    <b>Animation Throw Release Point Querying</b> - Unity's animation API is a bit odd and it seems this use case is uncommon, so I had to experiment with a few approaches.  What ended up working is adding an empty animation clip to my animator named "SampleClip" like below:<br/> 
+                    <b>Animation Throw Release Point Querying</b> - Unity's animation API is a bit odd.  It seems like it was created for animators unfamiliar with C# and the C# API is kind of an afterthought. I had to experiment with a few approaches.  What ended up working is adding an empty animation clip to my animator named "SampleClip" like below:
+                    <br/><br/>
                     <center><img src="img/animator_empty_clip.png" alt="a_star" style="width:300px;"></center><br/>
-                    In order to see where the release point of a throw is, I put my animation into SampleClip, skip forward to the release time, and sample the release bone's position.  That lets me grab the local position and local rotation below from the baseball throw:
+                    In order to see where the release point of a throw is, I put my animation into SampleClip, skip forward to the release time, and sample the release bone's position.  
+                    <br/><br/>
+                    To be specific to one use case, that utility lets me grab the local position and local rotation below from the baseball throw animation at the frame that the ball should be released:
+                    <br/><br/>
                     <center><img src="img/baseball_bone_position.png" alt="a_star" style="width:400px;"></center><br/>
+                    So, the point at the end of the red arrow is what I want so I can say "The trajectory starts <i>here</i>!".
                 <h5>Result</h5>
                 <h6>For the Player...</h6>
                 The player calls this whenever an item is equipped continuously.  Doing this without a cache of recent results created garbage collection issues, so I had to make it cache based on the player's rotation and return the result if it's been already done.
                 <br/>
                 It looks like below for a few weapon types when it's rendered.  The grey line is the preview of the trajectory.
-                <br/>
+                <br/><br/>
 
                 <center><img src="img/trajectory_calc/bottle_trajectory.gif" alt="a_star" style="width:255px;"><img src="img/trajectory_calc/baseball_bat_trajectory.gif" alt="a_star" style="width:255px;"><img src="img/trajectory_calc/baseball_trajectory.gif" style="width:255px;"></center>
                 <br/>
@@ -86,9 +91,9 @@
                 NPCs call the same API that the player does except they don't render the points, they use it to calculate the trajectory and to determine if they need to rotate to hit their target. 
                 <br/><br/>
                 NPC using the API to aim and throw a pizza and hit the player:
-                <br/>
+                <br/><br/>
                 <center><img src="img/trajectory_calc/npc_trajectory.gif" alt="a_star" style="width:400px;"></center>
-                
+                <br/>
                 This explanation for NPCs does hand-waive the code behind the scenes to make the NPCs know how to offset their rotation to hit the target, how to make NPCs calculate usable vantage points, but those are outside of the scope of this update.
                 <br/><br/>
                 However, NPCs can reliably understand the trajectory of their items, throw items, and hit targets. So, this is also doing what I need.
