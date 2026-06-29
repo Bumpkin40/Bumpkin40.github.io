@@ -56,7 +56,9 @@
                 <h5>Technical Approach</h5>
                 <h6>Building Blocks</h6>
                 <p>
-                    <b>Building Block 1 - Physics Simulation</b> - Unity3D allows you to run scenes simultaneously.  So, you can have your visible scene and a secondary scene which is not rendered and it can run faster than realtime. So, I decided to create a second scene which is run in the background and can handle various physics simulations. <br/><br/>
+                    <b>Building Block 1 - Physics Simulation</b> - I need one building block to be able to determine where exactly a projectile's trajectory will go.  
+                    <br/><br/>
+                    Unity3D allows you to run scenes simultaneously.  So, you can have your visible scene and a secondary scene which is not rendered and it can run faster than realtime. So, I decided to create a second scene which is run in the background and can handle various physics simulations. <br/><br/>
                     To keep the live physics and simulated the same, I created a PhysicsManipulator interface & implementation per projectile.  
                     <br/><br/>
                     This is necessary because projectiles might have starting torque/velocities or some propulsion to make them move in a game-like quick motion instead of being grounded in true physics.  The interface looks like below: 
